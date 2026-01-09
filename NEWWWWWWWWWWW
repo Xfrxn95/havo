@@ -1,24 +1,9 @@
+-- Holaaaaa
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 
--- Nombre para la UI
-local displayName = player.DisplayName ~= "" and player.DisplayName or player.Name
-
--- UI Library
-local library = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/CoronaBlanca/Lxbrxrys/refs/heads/main/Xlxrxxm"
-))()
-
-local window = library:AddWindow(("Test | Welcome %s"):format(displayName), {
-    main_color = Color3.fromRGB(38, 32, 46),
-    min_size = Vector2.new(590, 800),
-    can_resize = true,
-})
-
-local Killer = window:AddTab("Home")
-
--- Orden intercalado
 local PetsOrder = {
     "Wild Wizard",
     "Mighty Monster"
@@ -26,57 +11,59 @@ local PetsOrder = {
 
 local running = false
 
+-- Verificar si ya están equipadas correctamente
+local function needsEquip()
+    local count = 0
+    for _, pet in pairs(player.petsFolder.Equipped:GetChildren()) do
+        if table.find(PetsOrder, pet.Name) then
+            count += 1
+        end
+    end
+    return count < 8
+end
+
 Killer:AddSwitch("Bug Packs", function(state)
     running = state
     if not state then return end
 
     task.spawn(function()
         while running do
-            local petsFolder = player:WaitForChild("petsFolder")
+            if needsEquip() then
+                local petsFolder = player.petsFolder
 
-            -- Desequipar todas las pets
-            for _, folder in pairs(petsFolder:GetChildren()) do
-                if folder:IsA("Folder") then
-                    for _, pet in pairs(folder:GetChildren()) do
-                        ReplicatedStorage.rEvents.equipPetEvent:FireServer("unequipPet", pet)
+                -- Pool
+                local petPools = {
+                    ["Wild Wizard"] = {},
+                    ["Mighty Monster"] = {}
+                }
+
+                for _, pet in pairs(petsFolder.Unique:GetChildren()) do
+                    if petPools[pet.Name] then
+                        table.insert(petPools[pet.Name], pet)
                     end
                 end
-            end
 
-            task.wait(0.05)
+                local equipped = 0
+                local index = 1
 
-            -- Crear pools
-            local petPools = {
-                ["Wild Wizard"] = {},
-                ["Mighty Monster"] = {}
-            }
+                while equipped < 8 and running do
+                    local petName = PetsOrder[index]
+                    local pool = petPools[petName]
 
-            for _, pet in pairs(petsFolder.Unique:GetChildren()) do
-                if petPools[pet.Name] then
-                    table.insert(petPools[pet.Name], pet)
+                    if pool and #pool > 0 then
+                        ReplicatedStorage.rEvents.equipPetEvent:FireServer(
+                            "equipPet",
+                            table.remove(pool, 1)
+                        )
+                        equipped += 1
+                    end
+
+                    index = (index % #PetsOrder) + 1
                 end
             end
 
-            local equipped = 0
-            local index = 1
-
-            -- Equipado intercalado
-            while equipped < 8 and running do
-                local petName = PetsOrder[index]
-                local pool = petPools[petName]
-
-                if pool and #pool > 0 then
-                    ReplicatedStorage.rEvents.equipPetEvent:FireServer(
-                        "equipPet",
-                        table.remove(pool, 1)
-                    )
-                    equipped += 1
-                end
-
-                index = (index % #PetsOrder) + 1
-            end
-
-            task.wait(0.2) -- anti-spam
+            task.wait(1) -- 🔥 CLAVE: loop ligero
         end
     end)
 end)
+
