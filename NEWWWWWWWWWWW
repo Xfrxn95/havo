@@ -1,3 +1,6 @@
+-- ========================================
+-- SERVICIOS Y REFERENCIAS GLOBALES
+-- ========================================
 local Players = game:GetService("Players")
 local VirtualUser = game:GetService("VirtualUser")
 local RS = game:GetService("ReplicatedStorage")
@@ -8,6 +11,9 @@ local Workspace = workspace
 local LP = Players.LocalPlayer
 local Player = LP
 
+-- ========================================
+-- CONFIGURACIÓN DE DATOS
+-- ========================================
 local CONFIG = {
     BlacklistedUsers = {"DulceSkyx", "HonnyyDezz", "Honnydezz_z", "itsBAJAMILIONcat", "HonnyDezz_11", "PR_inmortal", "F3RNO0O00000", "xXLXGHTBRINGERXx"},
     BlacklistedPrefixes = {"SC_", "KTA_", "HZ_", "VAL_", "ZTX_"},
@@ -73,6 +79,9 @@ local CONFIG = {
     Ultimates = {"+1 Daily Spin", "+1 Pet Slot", "+10 Item Capacity", "+5% Rep Speed", "Demon Damage", "Galaxy Gains", "Golden Rebirth", "Jungle Swift", "Muscle Mind", "x2 Chest Rewards", "x2 Quest Rewards"}
 }
 
+-- ========================================
+-- VARIABLES DE ESTADO GLOBALES
+-- ========================================
 getgenv().godModeBrawl = false
 getgenv().autoWinBrawl = false
 getgenv().autoJoinBrawl = false
@@ -86,6 +95,9 @@ local rebirthsStat = leaderstats:WaitForChild("Rebirths")
 local strengthStat = leaderstats:WaitForChild("Strength")
 local durabilityStat = Player:WaitForChild("Durability")
 
+-- ========================================
+-- FUNCIONES AUXILIARES
+-- ========================================
 local function isBlacklisted(plr)
     local u, d = plr.Name:lower(), (plr.DisplayName or ""):lower()
     for _, user in ipairs(CONFIG.BlacklistedUsers) do
@@ -147,6 +159,9 @@ local function pressE()
     VIM:SendKeyEvent(false, "E", false, game)
 end
 
+-- ========================================
+-- VERIFICACIÓN DE USUARIO
+-- ========================================
 if isBlacklisted(Player) then
     warn("[Spectra X] Blacklisted user detected")
     task.spawn(function()
@@ -159,12 +174,18 @@ if isBlacklisted(Player) then
     return
 end
 
+-- ========================================
+-- ANTI-AFK
+-- ========================================
 Player.Idled:Connect(function()
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     task.wait(1)
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
+-- ========================================
+-- INTERFAZ GRÁFICA
+-- ========================================
 local displayName = Player.DisplayName ~= "" and Player.DisplayName or Player.Name
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CoronaBlanca/Lxbrxrys/refs/heads/main/Xlxrxxm"))()
 local window = library:AddWindow(("Spectra X | Welcome %s"):format(displayName), {
@@ -173,6 +194,9 @@ local window = library:AddWindow(("Spectra X | Welcome %s"):format(displayName),
     can_resize = true,
 })
 
+-- ========================================
+-- TAB HOME
+-- ========================================
 local HomeTab = window:AddTab("Home")
 HomeTab:AddLabel("╭──────────────────────────╮")
 HomeTab:AddLabel("    Welcome To Spextra X")
@@ -194,6 +218,9 @@ HomeTab:AddButton("Servidor Discord", function()
     setclipboard("https://discord.gg/zYrg2qPjTp")
 end)
 
+-- ========================================
+-- TAB MAIN - BRAWLS
+-- ========================================
 local MainTab = window:AddTab("Main")
 local BrawlFolder = MainTab:AddFolder("  Auto Brawls")
 
@@ -275,6 +302,9 @@ BrawlFolder:AddSwitch("Auto Join Brawls", function(state)
     end)
 end)
 
+-- ========================================
+-- TAB MAIN - GYMS
+-- ========================================
 local farmGymsFolder = MainTab:AddFolder("  Auto Gyms")
 local gymToggles = {}
 local workoutTypes = {"Bench Press", "Squat", "Deadlift", "Pull Up"}
@@ -323,6 +353,9 @@ for _, workoutType in ipairs(workoutTypes) do
     gymToggles[workoutType] = toggle
 end
 
+-- ========================================
+-- TAB MAIN - ROCKS
+-- ========================================
 local rockFolder = MainTab:AddFolder("  Auto Rocks")
 
 local function AddAutoPunchRock(title, rockName, delay)
@@ -372,7 +405,10 @@ rockFolder:AddSwitch("Auto Punch", function(state)
     end
 end)
 
-local autoEquipToolsFolder = MainTab:AddFolder("  Auto Tools")
+-- ========================================
+-- TAB MAIN - AUTO EQUIP TOOLS
+-- ========================================
+local autoEquipToolsFolder = MainTab:AddFolder("  Auto Equip Tools")
 
 autoEquipToolsFolder:AddButton("Gamepass AutoLift", function()
     local gamepassFolder = RS.gamepassIds
@@ -421,6 +457,9 @@ autoEquipToolsFolder:AddSwitch("Fast Tools", function(Value)
     end
 end)
 
+-- ========================================
+-- TAB FARM
+-- ========================================
 local FarmTab = window:AddTab("Farm")
 local RockFolder = FarmTab:AddFolder("  Auto Rock V2")
 local RockToggles = {}
@@ -446,7 +485,11 @@ for _, rock in ipairs(CONFIG.Rocks) do
     end
 end
 
-local toolsCombFolder = FarmTab:AddFolder("  Auto Tools V2")
+-- ========================================
+-- TAB FARM - TOOLS COMBINATION
+-- ========================================
+local toolsCombFolder = FarmTab:AddFolder("  Auto Tools OP")
+toolsCombFolder:AddLabel("-----{ Weight + Punch }-----")
 
 local function AddAutoTool(title, toolName, rockName, delay)
     local enabled = false
@@ -514,6 +557,9 @@ for _, combo in ipairs(toolCombinations) do
     AddAutoTool(combo[1], combo[2], "Ancient Jungle Rock", 0.0001)
 end
 
+-- ========================================
+-- TAB FARM - REBIRTHS
+-- ========================================
 local rebirthsFolder = FarmTab:AddFolder("  Auto Rebirths")
 local targetRebirthValue = 0
 
@@ -605,6 +651,9 @@ rebirthsFolder:AddButton("Anti Rebirth", function()
     end)
 end)
 
+-- ========================================
+-- TAB PACKS - REBIRTH WITH PACKS
+-- ========================================
 local PacksTab = window:AddTab("Packs")
 local RebirthFolder = PacksTab:AddFolder("  Rebirth With Packs")
 
@@ -883,6 +932,9 @@ RebirthFolder:AddButton("Jungle Lift", function()
     VIM:SendKeyEvent(false, Enum.KeyCode.E, false, game)
 end)
 
+-- ========================================
+-- TAB PACKS - STRENGTH WITH PACKS
+-- ========================================
 local StrengthFolder = PacksTab:AddFolder("  Strength With Packs")
 
 StrengthFolder:AddLabel("Time:").TextSize = 20
@@ -1192,6 +1244,9 @@ StrengthFolder:AddButton("Equip Swift Samurai", function()
     equipPetsByName("Swift Samurai")
 end)
 
+-- ========================================
+-- TAB STATS
+-- ========================================
 local estadisticas = window:AddTab("Stats")
 local SelectPlayerName = ""
 
@@ -1224,7 +1279,7 @@ end
 
 local labels = {}
 for i = 0, 13 do
-    labels[i] = estadisticas:AddLabel("Players Stats")
+    labels[i] = estadisticas:AddLabel("")
 end
 
 task.spawn(function()
@@ -1308,6 +1363,9 @@ task.spawn(function()
     end
 end)
 
+-- ========================================
+-- TAB MISC
+-- ========================================
 local MiscTab = window:AddTab("Misc")
 local misc1Folder = MiscTab:AddFolder("  Misc 1")
 
@@ -1517,6 +1575,9 @@ misc4Folder:AddSwitch("Full Walk on Water", function(bool)
     end
 end)
 
+-- ========================================
+-- TAB PETS
+-- ========================================
 local pets = window:AddTab("Pets")
 
 local crystalData = {
@@ -1627,31 +1688,27 @@ pets:AddSwitch("Auto Buy Ultimates", function(bool)
     end
 end)
 
-local strengthStartValue = 0
-local durabilityStartValue = 0
-local rebirthsStartValue = 0
-local killsStartValue = 0
-local brawlsStartValue = 0
+-- ========================================
+-- TABS RESTANTES (PLACEHOLDER)
+-- ========================================
 
-local strengthStartTime = 0
-local durabilityStartTime = 0
-local rebirthsStartTime = 0
-local killsStartTime = 0
-local brawlsStartTime = 0
+-- ========================================
+-- TAB DATA - CALCULATORS
+-- ========================================
+local DataTab = window:AddTab("Data")
 
-local strengthActive = false
-local durabilityActive = false
-local rebirthsActive = false
-local killsActive = false
-local brawlsActive = false
-
-local Calculator = window:AddTab("Data")
-
-local strengthFolder = Calculator:AddFolder("Strength")
-local durabilityFolder = Calculator:AddFolder("Durability")
-local rebirthssFolder = Calculator:AddFolder("Rebirths")
-local killsFolder = Calculator:AddFolder("Kills")
-local brawlsFolder = Calculator:AddFolder("Brawls")
+local calculatorData = {
+    {name = "Strength", folder = nil, labels = {}, active = false, startTime = 0, startValue = 0, 
+     getValue = function() return Player.leaderstats.Strength.Value end},
+    {name = "Durability", folder = nil, labels = {}, active = false, startTime = 0, startValue = 0,
+     getValue = function() return Player.Durability.Value end},
+    {name = "Rebirths", folder = nil, labels = {}, active = false, startTime = 0, startValue = 0,
+     getValue = function() return Player.leaderstats.Rebirths.Value end},
+    {name = "Kills", folder = nil, labels = {}, active = false, startTime = 0, startValue = 0,
+     getValue = function() return Player.leaderstats.Kills.Value end},
+    {name = "Brawls", folder = nil, labels = {}, active = false, startTime = 0, startValue = 0,
+     getValue = function() return Player.leaderstats.Brawls.Value end}
+}
 
 local function formatFull(num)
     local formatted = tostring(math.floor(num))
@@ -1663,19 +1720,15 @@ local function formatFull(num)
     return formatted
 end
 
-local function formatNumber(num)
-    if num == math.huge then
-        return "∞"
-    elseif num == 0 then
-        return "0"
-    elseif num < 0.01 and num > 0 then
-        return "~0"
-    end
-
+local function formatNumberCalc(num)
+    if num == math.huge then return "∞"
+    elseif num == 0 then return "0"
+    elseif num < 0.01 and num > 0 then return "~0" end
+    
     local abs = math.abs(num)
     local sign = num < 0 and "-" or ""
     local value, suffix
-
+    
     if abs >= 1e30 then value, suffix = abs / 1e30, "No"
     elseif abs >= 1e27 then value, suffix = abs / 1e27, "Oc"
     elseif abs >= 1e24 then value, suffix = abs / 1e24, "Sp"
@@ -1686,291 +1739,201 @@ local function formatNumber(num)
     elseif abs >= 1e9 then value, suffix = abs / 1e9, "B"
     elseif abs >= 1e6 then value, suffix = abs / 1e6, "M"
     elseif abs >= 1e3 then value, suffix = abs / 1e3, "K"
-    else value, suffix = abs, ""
-    end
-
-    local cleanValue = tostring(tonumber(string.format("%.2f", value)))
-    return sign .. cleanValue .. suffix
+    else value, suffix = abs, "" end
+    
+    return sign .. string.format("%.2f", value) .. suffix
 end
 
-local function formatDisplay(num)
-    return formatNumber(num) .. " 【" .. formatFull(num) .. "】"
+local function formatDisplayCalc(num)
+    return formatNumberCalc(num) .. " 【" .. formatFull(num) .. "】"
 end
 
-local function getCurrentStrength()
-    local player = game.Players.LocalPlayer
-    if player and player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Strength") then
-        return player.leaderstats.Strength.Value
-    end
-    return 0
-end
-
-local function getCurrentDurability()
-    local player = game.Players.LocalPlayer
-    if player and player:FindFirstChild("Durability") then
-        return player.Durability.Value
-    end
-    return 0
-end
-
-local function getCurrentRebirths()
-    local player = game.Players.LocalPlayer
-    if player and player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Rebirths") then
-        return player.leaderstats.Rebirths.Value
-    end
-    return 0
-end
-
-local function getCurrentKills()
-    local player = game.Players.LocalPlayer
-    if player and player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Kills") then
-        return player.leaderstats.Kills.Value
-    end
-    return 0
-end
-
-local function getCurrentBrawls()
-    local player = game.Players.LocalPlayer
-    if player and player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Brawls") then
-        return player.leaderstats.Brawls.Value
-    end
-    return 0
-end
-
-local function createLabels(folder)
-    return {
-        status = folder:AddLabel("Status: Presiona Start para comenzar"),
-        current = folder:AddLabel("Current: 0"),
-        gained = folder:AddLabel("Gained: 0"),
-        perMinute = folder:AddLabel("Per Minute: 0"),
-        perHour = folder:AddLabel("Per Hour: 0"),
-        perDay = folder:AddLabel("Per Day: 0")
+for _, calc in ipairs(calculatorData) do
+    calc.folder = DataTab:AddFolder(calc.name)
+    calc.labels = {
+        status = calc.folder:AddLabel("Status: ⏸ Presiona Start"),
+        current = calc.folder:AddLabel("Current: 0"),
+        gained = calc.folder:AddLabel("Gained: 0"),
+        separator = calc.folder:AddLabel("───────────────"),
+        perMinute = calc.folder:AddLabel("Per Minute: 0"),
+        perHour = calc.folder:AddLabel("Per Hour: 0"),
+        perDay = calc.folder:AddLabel("Per Day: 0")
     }
-end
-
-local strengthLabels = createLabels(strengthFolder)
-local durabilityLabels = createLabels(durabilityFolder)
-local rebirthssLabels = createLabels(rebirthsFolder)
-local killsLabels = createLabels(killsFolder)
-local brawlsLabels = createLabels(brawlsFolder)
-
-local function updateLabels(active, startTime, startValue, currentValue, labels)
-    local currentTime = tick()
-    labels.current.Text = "Current: " .. formatDisplay(currentValue)
-
-    if active and startTime > 0 then
-        local timeElapsed = currentTime - startTime
-        local gained = currentValue - startValue
-        labels.gained.Text = "Gained: " .. formatDisplay(gained)
-
-        if timeElapsed >= 60 then
-            local perMinute = (gained / timeElapsed) * 60
-            local perHour = perMinute * 60
-            local perDay = perHour * 24
-            labels.status.Text = "Status:  Activo"
-            labels.perMinute.Text = "Per Minute: " .. formatDisplay(perMinute)
-            labels.perHour.Text = "Per Hour: " .. formatDisplay(perHour)
-            labels.perDay.Text = "Per Day: " .. formatDisplay(perDay)
-        else
-            local remaining = 60 - timeElapsed
-            labels.status.Text = "Status:  Calculando... " .. math.ceil(remaining) .. "s"
-            labels.perMinute.Text = "Per Minute: Calculando..."
-            labels.perHour.Text = "Per Hour: Calculando..."
-            labels.perDay.Text = "Per Day: Calculando..."
+    
+    for _, lbl in pairs(calc.labels) do
+        if lbl ~= calc.labels.separator then
+            lbl.TextSize = 17
         end
-    else
-        labels.gained.Text = "Gained: 0"
-        labels.perMinute.Text = "Per Minute: 0"
-        labels.perHour.Text = "Per Hour: 0"
-        labels.perDay.Text = "Per Day: 0"
     end
-end
-
-strengthActive, durabilityActive, rebirthsActive, killsActive, brawlsActive = false, false, false, false, false
-strengthStartTime, durabilityStartTime, rebirthsStartTime, killsStartTime, brawlsStartTime = 0, 0, 0, 0, 0
-strengthStartValue, durabilityStartValue, rebirthsStartValue, killsStartValue, brawlsStartValue = 0, 0, 0, 0, 0
-
-local function addCalculatorButtons(folder, name, getCurrent, labels, activeVar, startTimeVar, startValueVar)
-    folder:AddButton("Start " .. name .. " Calculator", function()
-        _G[activeVar] = true
-        _G[startTimeVar] = tick()
-        _G[startValueVar] = getCurrent()
-        labels.status.Text = "Status:  Iniciado - Calculando..."
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Calculator";
-            Text = name .. " Calculator iniciado!";
-            Duration = 3;
-        })
+    
+    calc.folder:AddButton("▶ Start " .. calc.name, function()
+        calc.active = true
+        calc.startTime = tick()
+        calc.startValue = calc.getValue()
+        calc.labels.status.Text = "Status: ⏱ Calculando..."
     end)
-
-    folder:AddButton("Stop " .. name .. " Calculator", function()
-        _G[activeVar] = false
-        _G[startTimeVar] = 0
-        _G[startValueVar] = 0
-        labels.status.Text = "Status:  Detenido"
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Calculator";
-            Text = name .. " Calculator detenido!";
-            Duration = 3;
-        })
+    
+    calc.folder:AddButton("⏸ Stop " .. calc.name, function()
+        calc.active = false
+        calc.startTime = 0
+        calc.startValue = 0
+        calc.labels.status.Text = "Status: ⏸ Detenido"
     end)
 end
 
-addCalculatorButtons(strengthFolder, "Strength", getCurrentStrength, strengthLabels, "strengthActive", "strengthStartTime", "strengthStartValue")
-addCalculatorButtons(durabilityFolder, "Durability", getCurrentDurability, durabilityLabels, "durabilityActive", "durabilityStartTime", "durabilityStartValue")
-addCalculatorButtons(rebirthssFolder, "Rebirths", getCurrentRebirths, rebirthssLabels, "rebirthsActive", "rebirthsStartTime", "rebirthsStartValue")
-addCalculatorButtons(killsFolder, "Kills", getCurrentKills, killsLabels, "killsActive", "killsStartTime", "killsStartValue")
-addCalculatorButtons(brawlsFolder, "Brawls", getCurrentBrawls, brawlsLabels, "brawlsActive", "brawlsStartTime", "brawlsStartValue")
-
-Calculator:AddButton("Reset All Calculators", function()
-    strengthActive, durabilityActive, rebirthsActive, killsActive, brawlsActive = false, false, false, false, false
-    strengthStartTime, durabilityStartTime, rebirthsStartTime, killsStartTime, brawlsStartTime = 0, 0, 0, 0, 0
-    strengthStartValue, durabilityStartValue, rebirthsStartValue, killsStartValue, brawlsStartValue = 0, 0, 0, 0, 0
-
-    for _, v in pairs({strengthLabels, durabilityLabels, rebirthssLabels, killsLabels, brawlsLabels}) do
-        v.status.Text = "Status: Presiona Start para comenzar"
-        v.gained.Text = "Gained: 0"
-        v.perMinute.Text = "Per Minute: 0"
-        v.perHour.Text = "Per Hour: 0"
-        v.perDay.Text = "Per Day: 0"
+DataTab:AddButton("🔄 Reset All Calculators", function()
+    for _, calc in ipairs(calculatorData) do
+        calc.active = false
+        calc.startTime = 0
+        calc.startValue = 0
+        calc.labels.status.Text = "Status: ⏸ Presiona Start"
+        calc.labels.gained.Text = "Gained: 0"
+        calc.labels.perMinute.Text = "Per Minute: 0"
+        calc.labels.perHour.Text = "Per Hour: 0"
+        calc.labels.perDay.Text = "Per Day: 0"
     end
-
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Calculator";
-        Text = "Todos los calculators han sido reiniciados!";
-        Duration = 3;
-    })
 end)
 
 task.spawn(function()
     while true do
-        updateLabels(strengthActive, strengthStartTime, strengthStartValue, getCurrentStrength(), strengthLabels)
-        updateLabels(durabilityActive, durabilityStartTime, durabilityStartValue, getCurrentDurability(), durabilityLabels)
-        updateLabels(rebirthsActive, rebirthsStartTime, rebirthsStartValue, getCurrentRebirths(), rebirthssLabels)
-        updateLabels(killsActive, killsStartTime, killsStartValue, getCurrentKills(), killsLabels)
-        updateLabels(brawlsActive, brawlsStartTime, brawlsStartValue, getCurrentBrawls(), brawlsLabels)
+        for _, calc in ipairs(calculatorData) do
+            local currentValue = calc.getValue()
+            calc.labels.current.Text = "Current: " .. formatDisplayCalc(currentValue)
+            
+            if calc.active and calc.startTime > 0 then
+                local timeElapsed = tick() - calc.startTime
+                local gained = currentValue - calc.startValue
+                calc.labels.gained.Text = "Gained: " .. formatDisplayCalc(gained)
+                
+                if timeElapsed >= 60 then
+                    local perMinute = (gained / timeElapsed) * 60
+                    local perHour = perMinute * 60
+                    local perDay = perHour * 24
+                    calc.labels.status.Text = "Status: ✅ Activo"
+                    calc.labels.perMinute.Text = "Per Minute: " .. formatDisplayCalc(perMinute)
+                    calc.labels.perHour.Text = "Per Hour: " .. formatDisplayCalc(perHour)
+                    calc.labels.perDay.Text = "Per Day: " .. formatDisplayCalc(perDay)
+                else
+                    local remaining = 60 - timeElapsed
+                    calc.labels.status.Text = "Status: ⏱ Calculando " .. math.ceil(remaining) .. "s"
+                    calc.labels.perMinute.Text = "Per Minute: Calculando..."
+                    calc.labels.perHour.Text = "Per Hour: Calculando..."
+                    calc.labels.perDay.Text = "Per Day: Calculando..."
+                end
+            else
+                calc.labels.gained.Text = "Gained: 0"
+                calc.labels.perMinute.Text = "Per Minute: 0"
+                calc.labels.perHour.Text = "Per Hour: 0"
+                calc.labels.perDay.Text = "Per Day: 0"
+            end
+        end
         task.wait(1)
     end
 end)
 
-local Gift = window:AddTab("Gift")
-Gift:AddLabel("Gifting Protein egg:").TextSize = 22
+-- ========================================
+-- TAB GIFT
+-- ========================================
+local GiftTab = window:AddTab("Gift")
 
-local proteinEggLabel = Gift:AddLabel("Protein Eggs: 0")
-proteinEggLabel.TextSize = 20
+local giftData = {
+    egg = {player = nil, count = 0, itemName = "Protein Egg", label = nil},
+    shake = {player = nil, count = 0, itemName = "Tropical Shake", label = nil}
+}
 
-local selectedEggPlayer = nil
-local eggCount = 0
+GiftTab:AddLabel("Gifting Protein egg:").TextSize = 22
+giftData.egg.label = GiftTab:AddLabel("Protein Eggs: 0")
+giftData.egg.label.TextSize = 20
 
-local eggDropdown = Gift:AddDropdown("Player to Gift Eggs", function(selectedDisplayName)
+local eggDropdown = GiftTab:AddDropdown("Player to Gift Eggs", function(selectedDisplayName)
     for _, plr in ipairs(Players:GetPlayers()) do
         if plr.DisplayName == selectedDisplayName then
-            selectedEggPlayer = plr
+            giftData.egg.player = plr
             break
         end
     end
 end)
 
 for _, plr in ipairs(Players:GetPlayers()) do
-    if plr ~= Players.LocalPlayer then
+    if plr ~= Player then
         eggDropdown:Add(plr.DisplayName)
     end
 end
 
 Players.PlayerAdded:Connect(function(plr)
-    if plr ~= Players.LocalPlayer then
+    if plr ~= Player then
         eggDropdown:Add(plr.DisplayName)
     end
 end)
 
-Gift:AddTextBox("Amount of Eggs", function(text)
-    eggCount = tonumber(text) or 0
+GiftTab:AddTextBox("Amount of Eggs", function(text)
+    giftData.egg.count = tonumber(text) or 0
 end)
 
-Gift:AddButton("Gift Eggs", function()
-    if not selectedEggPlayer then return end
-    if eggCount <= 0 then return end
-
-    local consumables = Players.LocalPlayer:FindFirstChild("consumablesFolder")
+GiftTab:AddButton("Gift Eggs", function()
+    if not giftData.egg.player or giftData.egg.count <= 0 then return end
+    local consumables = Player:FindFirstChild("consumablesFolder")
     if not consumables then return end
-
-    local EGG_NAME = "Protein Egg"
-
-    for i = 1, eggCount do
-        local egg = consumables:FindFirstChild(EGG_NAME)
-
+    
+    for i = 1, giftData.egg.count do
+        local egg = consumables:FindFirstChild(giftData.egg.itemName)
         if egg and egg:IsA("Instance") then
-            local success, err = pcall(function()
-                ReplicatedStorage.rEvents.giftRemote:InvokeServer(
-                    "giftRequest",
-                    selectedEggPlayer,
-                    egg
-                )
+            local success = pcall(function()
+                RS.rEvents.giftRemote:InvokeServer("giftRequest", giftData.egg.player, egg)
             end)
-
-            if not success then
-                warn("Error gifting egg:", err)
-                break
-            end
+            if not success then break end
         else
-            warn("No more Protein Eggs available")
             break
         end
-
         task.wait(0.15)
     end
 end)
 
-Gift:AddLabel("Gifting Tropical Shakes:").TextSize = 22
+GiftTab:AddLabel("Gifting Tropical Shakes:").TextSize = 22
+giftData.shake.label = GiftTab:AddLabel("Tropical Shakes: 0")
+giftData.shake.label.TextSize = 18
 
-local tropicalShakeLabel = Gift:AddLabel("Tropical Shakes: 0")
-tropicalShakeLabel.TextSize = 18
-
-local selectedShakePlayer = nil
-local shakeCount = 0
-
-local shakeDropdown = Gift:AddDropdown("Player to Gift Tropical Shakes", function(selectedDisplayName)
+local shakeDropdown = GiftTab:AddDropdown("Player to Gift Tropical Shakes", function(selectedDisplayName)
     for _, plr in ipairs(Players:GetPlayers()) do
         if plr.DisplayName == selectedDisplayName then
-            selectedShakePlayer = plr
+            giftData.shake.player = plr
             break
         end
     end
 end)
 
 for _, plr in ipairs(Players:GetPlayers()) do
-    if plr ~= Players.LocalPlayer then
+    if plr ~= Player then
         shakeDropdown:Add(plr.DisplayName)
     end
 end
 
 Players.PlayerAdded:Connect(function(plr)
-    if plr ~= Players.LocalPlayer then
+    if plr ~= Player then
         shakeDropdown:Add(plr.DisplayName)
     end
 end)
 
-Gift:AddTextBox("Tropical Shakes gift", function(text)
-    shakeCount = tonumber(text) or 0
+GiftTab:AddTextBox("Tropical Shakes gift", function(text)
+    giftData.shake.count = tonumber(text) or 0
 end)
 
-Gift:AddButton("Gift Tropical Shakes", function()
-    if selectedShakePlayer and shakeCount > 0 then
-        for i = 1, shakeCount do
-            local shake = Players.LocalPlayer.consumablesFolder:FindFirstChild("Tropical Shake")
-            if shake then
-                ReplicatedStorage.rEvents.giftRemote:InvokeServer("giftRequest", selectedShakePlayer, shake)
-                task.wait(0.1)
-            end
+GiftTab:AddButton("Gift Tropical Shakes", function()
+    if not giftData.shake.player or giftData.shake.count <= 0 then return end
+    for i = 1, giftData.shake.count do
+        local shake = Player.consumablesFolder:FindFirstChild(giftData.shake.itemName)
+        if shake then
+            RS.rEvents.giftRemote:InvokeServer("giftRequest", giftData.shake.player, shake)
+            task.wait(0.1)
+        else
+            break
         end
     end
 end)
 
 local function updateItemCount()
-    local proteinEggCount = 0
-    local tropicalShakeCount = 0
-
-    local backpack = Players.LocalPlayer:WaitForChild("Backpack")
+    local proteinEggCount, tropicalShakeCount = 0, 0
+    local backpack = Player:WaitForChild("Backpack")
     if backpack then
         for _, item in ipairs(backpack:GetChildren()) do
             if item.Name == "Protein Egg" then
@@ -1980,9 +1943,8 @@ local function updateItemCount()
             end
         end
     end
-
-    proteinEggLabel.Text = "Protein Eggs: " .. proteinEggCount
-    tropicalShakeLabel.Text = "Tropical Shakes: " .. tropicalShakeCount
+    giftData.egg.label.Text = "Protein Eggs: " .. proteinEggCount
+    giftData.shake.label.Text = "Tropical Shakes: " .. tropicalShakeCount
 end
 
 task.spawn(function()
@@ -1992,31 +1954,17 @@ task.spawn(function()
     end
 end)
 
-
 local autoEatBoostsEnabled = false
-
-local boostsList = {
-    "ULTRA Shake",
-    "TOUGH Bar",
-    "Protein Shake",
-    "Energy Shake",
-    "Protein Bar",
-    "Energy Bar",
-    "Tropical Shake"
-}
+local boostsList = {"ULTRA Shake", "TOUGH Bar", "Protein Shake", "Energy Shake", "Protein Bar", "Energy Bar", "Tropical Shake"}
 
 local function eatAllBoosts()
-    local player = game.Players.LocalPlayer
-    local backpack = player:WaitForChild("Backpack")
-    local character = player.Character or player.CharacterAdded:Wait()
-
+    local backpack = Player:WaitForChild("Backpack")
+    local character = Player.Character or Player.CharacterAdded:Wait()
     for _, boostName in ipairs(boostsList) do
         local boost = backpack:FindFirstChild(boostName)
         while boost do
             boost.Parent = character
-            pcall(function()
-                boost:Activate()
-            end)
+            pcall(function() boost:Activate() end)
             task.wait(0)
             boost = backpack:FindFirstChild(boostName)
         end
@@ -2034,10 +1982,13 @@ task.spawn(function()
     end
 end)
 
-Gift:AddSwitch("Auto Clear Inventory", function(state)
+GiftTab:AddSwitch("Auto Clear Inventory", function(state)
     autoEatBoostsEnabled = state
 end)
 
+-- ========================================
+-- TABS FINALES (PLACEHOLDER)
+-- ========================================
 local KillerTab = window:AddTab("Killer")
 local ExtrasTab = window:AddTab("Extras")
 local TeleportTab = window:AddTab("Teleport")
