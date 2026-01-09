@@ -1258,25 +1258,19 @@ local function AddPlayerToDropdown(plr)
     PlayerDrop:Add(plr.DisplayName .. " | " .. plr.Name)
 end
 
-local function RefreshPlayerDropdown()
-    PlayerDrop:Clear()
-    for _, plr in ipairs(Players:GetPlayers()) do
-        AddPlayerToDropdown(plr)
-    end
+for _, plr in ipairs(Players:GetPlayers()) do
+    AddPlayerToDropdown(plr)
 end
-
-RefreshPlayerDropdown()
 
 Players.PlayerAdded:Connect(function(plr)
     task.wait(0.2)
-    RefreshPlayerDropdown()
+    AddPlayerToDropdown(plr)
 end)
 
 Players.PlayerRemoving:Connect(function(plr)
     if SelectPlayerName == plr.Name then
         SelectPlayerName = ""
     end
-    RefreshPlayerDropdown()
 end)
 
 local function FormatDisplay(value)
@@ -1851,8 +1845,8 @@ GiftTab:AddLabel("Gifting Protein egg:").TextSize = 22
 giftData.egg.label = GiftTab:AddLabel("Protein Eggs: 0")
 giftData.egg.label.TextSize = 20
 
-giftData.egg.dropdown = GiftTab:AddDropdown("Player to Gift Eggs", function(selectedDisplayName)
-    local playerName = selectedDisplayName:match("| (.+)")
+giftData.egg.dropdown = GiftTab:AddDropdown("Player to Gift Eggs", function(selectedText)
+    local playerName = selectedText:match("| (.+)")
     if playerName then
         for _, plr in ipairs(Players:GetPlayers()) do
             if plr.Name == playerName then
@@ -1863,27 +1857,18 @@ giftData.egg.dropdown = GiftTab:AddDropdown("Player to Gift Eggs", function(sele
     end
 end)
 
-local function RefreshGiftDropdowns()
-    giftData.egg.dropdown:Clear()
-    giftData.shake.dropdown:Clear()
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= Player then
-            local displayText = plr.DisplayName .. " | " .. plr.Name
-            giftData.egg.dropdown:Add(displayText)
-            giftData.shake.dropdown:Add(displayText)
-        end
+for _, plr in ipairs(Players:GetPlayers()) do
+    if plr ~= Player then
+        giftData.egg.dropdown:Add(plr.DisplayName .. " | " .. plr.Name)
     end
 end
 
-RefreshGiftDropdowns()
-
 Players.PlayerAdded:Connect(function(plr)
-    task.wait(0.2)
-    RefreshGiftDropdowns()
-end)
-
-Players.PlayerRemoving:Connect(function(plr)
-    RefreshGiftDropdowns()
+    if plr ~= Player then
+        task.wait(0.2)
+        giftData.egg.dropdown:Add(plr.DisplayName .. " | " .. plr.Name)
+        giftData.shake.dropdown:Add(plr.DisplayName .. " | " .. plr.Name)
+    end
 end)
 
 GiftTab:AddTextBox("Amount of Eggs", function(text)
@@ -1913,8 +1898,8 @@ GiftTab:AddLabel("Gifting Tropical Shakes:").TextSize = 22
 giftData.shake.label = GiftTab:AddLabel("Tropical Shakes: 0")
 giftData.shake.label.TextSize = 18
 
-giftData.shake.dropdown = GiftTab:AddDropdown("Player to Gift Tropical Shakes", function(selectedDisplayName)
-    local playerName = selectedDisplayName:match("| (.+)")
+giftData.shake.dropdown = GiftTab:AddDropdown("Player to Gift Tropical Shakes", function(selectedText)
+    local playerName = selectedText:match("| (.+)")
     if playerName then
         for _, plr in ipairs(Players:GetPlayers()) do
             if plr.Name == playerName then
@@ -1924,6 +1909,12 @@ giftData.shake.dropdown = GiftTab:AddDropdown("Player to Gift Tropical Shakes", 
         end
     end
 end)
+
+for _, plr in ipairs(Players:GetPlayers()) do
+    if plr ~= Player then
+        giftData.shake.dropdown:Add(plr.DisplayName .. " | " .. plr.Name)
+    end
+end
 
 GiftTab:AddTextBox("Tropical Shakes gift", function(text)
     giftData.shake.count = tonumber(text) or 0
@@ -2283,30 +2274,23 @@ local spyTargetDropdown = KillerTab:AddDropdown("Select View Target", function(t
     end
 end)
 
-local function RefreshKillerDropdowns()
-    whitelistDropdown:Clear()
-    blacklistDropdown:Clear()
-    spyTargetDropdown:Clear()
-    
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= Player then
-            local displayText = plr.DisplayName .. " | " .. plr.Name
-            whitelistDropdown:Add(displayText)
-            blacklistDropdown:Add(displayText)
-            spyTargetDropdown:Add(displayText)
-        end
+for _, plr in ipairs(Players:GetPlayers()) do
+    if plr ~= Player then
+        local displayText = plr.DisplayName .. " | " .. plr.Name
+        whitelistDropdown:Add(displayText)
+        blacklistDropdown:Add(displayText)
+        spyTargetDropdown:Add(displayText)
     end
 end
 
-RefreshKillerDropdowns()
-
 Players.PlayerAdded:Connect(function(plr)
-    task.wait(0.2)
-    RefreshKillerDropdowns()
-end)
-
-Players.PlayerRemoving:Connect(function(plr)
-    RefreshKillerDropdowns()
+    if plr ~= Player then
+        task.wait(0.2)
+        local displayText = plr.DisplayName .. " | " .. plr.Name
+        whitelistDropdown:Add(displayText)
+        blacklistDropdown:Add(displayText)
+        spyTargetDropdown:Add(displayText)
+    end
 end)
 
 KillerTab:AddSwitch("Kill Everyone", function(bool)
