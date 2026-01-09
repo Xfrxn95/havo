@@ -1,4 +1,16 @@
--- Holaaaaa
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
+
+local displayName = Player.DisplayName ~= "" and Player.DisplayName or Player.Name
+library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CoronaBlanca/Lxbrxrys/refs/heads/main/Xlxrxxm"))()
+local window = library:AddWindow(("Test | Welcome %s"):format(displayName), {
+    main_color = Color3.fromRGB(38, 32, 46),
+    min_size = Vector2.new(590, 800),
+    can_resize = true,
+})
+
+local Killer = window:AddTab("Home")
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
