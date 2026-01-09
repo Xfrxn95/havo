@@ -2,8 +2,14 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 
-local displayName = Player.DisplayName ~= "" and Player.DisplayName or Player.Name
-library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CoronaBlanca/Lxbrxrys/refs/heads/main/Xlxrxxm"))()
+-- Nombre para la UI
+local displayName = player.DisplayName ~= "" and player.DisplayName or player.Name
+
+-- UI Library
+local library = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/CoronaBlanca/Lxbrxrys/refs/heads/main/Xlxrxxm"
+))()
+
 local window = library:AddWindow(("Test | Welcome %s"):format(displayName), {
     main_color = Color3.fromRGB(38, 32, 46),
     min_size = Vector2.new(590, 800),
@@ -12,7 +18,7 @@ local window = library:AddWindow(("Test | Welcome %s"):format(displayName), {
 
 local Killer = window:AddTab("Home")
 
-local Killer:Addt
+-- Orden intercalado
 local PetsOrder = {
     "Wild Wizard",
     "Mighty Monster"
@@ -26,9 +32,9 @@ Killer:AddSwitch("Bug Packs", function(state)
 
     task.spawn(function()
         while running do
-            local petsFolder = player.petsFolder
+            local petsFolder = player:WaitForChild("petsFolder")
 
-            -- Desequipar todas
+            -- Desequipar todas las pets
             for _, folder in pairs(petsFolder:GetChildren()) do
                 if folder:IsA("Folder") then
                     for _, pet in pairs(folder:GetChildren()) do
@@ -39,7 +45,7 @@ Killer:AddSwitch("Bug Packs", function(state)
 
             task.wait(0.05)
 
-            -- Pools
+            -- Crear pools
             local petPools = {
                 ["Wild Wizard"] = {},
                 ["Mighty Monster"] = {}
@@ -54,20 +60,23 @@ Killer:AddSwitch("Bug Packs", function(state)
             local equipped = 0
             local index = 1
 
+            -- Equipado intercalado
             while equipped < 8 and running do
                 local petName = PetsOrder[index]
                 local pool = petPools[petName]
 
                 if pool and #pool > 0 then
-                    ReplicatedStorage.rEvents.equipPetEvent:FireServer("equipPet", table.remove(pool, 1))
+                    ReplicatedStorage.rEvents.equipPetEvent:FireServer(
+                        "equipPet",
+                        table.remove(pool, 1)
+                    )
                     equipped += 1
                 end
 
                 index = (index % #PetsOrder) + 1
             end
 
-            task.wait(0.2) -- evita spam excesivo
+            task.wait(0.2) -- anti-spam
         end
     end)
 end)
-
