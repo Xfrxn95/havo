@@ -1,6 +1,3 @@
--- ========================================
--- SERVICIOS Y REFERENCIAS GLOBALES
--- ========================================
 local Services = {
     Players = game:GetService("Players"),
     VirtualUser = game:GetService("VirtualUser"),
@@ -17,9 +14,6 @@ local Players, VirtualUser, RS, VIM, RunService, Stats, Workspace =
 local LP = Players.LocalPlayer
 local Player = LP
 
--- ========================================
--- CONFIGURACIÓN DE DATOS
--- ========================================
 local CONFIG = {
     BlacklistedUsers = {"DulceSkyx", "HonnyyDezz", "Honnydezz_z", "itsBAJAMILIONcat", "HonnyDezz_11", "PR_inmortal", "F3RNO0O00000", "xXLXGHTBRINGERXx"},
     BlacklistedPrefixes = {"SC_", "KTA_", "HZ_", "VAL_", "ZTX_"},
@@ -87,9 +81,6 @@ local CONFIG = {
     Boosts = {"ULTRA Shake", "TOUGH Bar", "Protein Shake", "Energy Shake", "Protein Bar", "Energy Bar", "Tropical Shake"}
 }
 
--- ========================================
--- VARIABLES DE ESTADO GLOBALES
--- ========================================
 getgenv().godModeBrawl = false
 getgenv().autoWinBrawl = false
 getgenv().autoJoinBrawl = false
@@ -113,9 +104,7 @@ refs.durabilityStat = Player:WaitForChild("Durability")
 local muscleEvent, leaderstats, rebirthsStat, strengthStat, durabilityStat = 
     refs.muscleEvent, refs.leaderstats, refs.rebirthsStat, refs.strengthStat, refs.durabilityStat
 
--- ========================================
--- FUNCIONES AUXILIARES
--- ========================================
+
 local function isBlacklisted(plr)
     local u, d = plr.Name:lower(), (plr.DisplayName or ""):lower()
     for _, user in ipairs(CONFIG.BlacklistedUsers) do
@@ -177,9 +166,6 @@ local function pressE()
     VIM:SendKeyEvent(false, "E", false, game)
 end
 
--- ========================================
--- VERIFICACIÓN DE USUARIO
--- ========================================
 if isBlacklisted(Player) then
     warn("[Spectra X] Blacklisted user detected")
     task.spawn(function()
@@ -192,18 +178,12 @@ if isBlacklisted(Player) then
     return
 end
 
--- ========================================
--- ANTI-AFK
--- ========================================
 Player.Idled:Connect(function()
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     task.wait(1)
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
--- ========================================
--- INTERFAZ GRÁFICA
--- ========================================
 local displayName = Player.DisplayName ~= "" and Player.DisplayName or Player.Name
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CoronaBlanca/Lxbrxrys/refs/heads/main/Xlxrxxm"))()
 local window = library:AddWindow(("Spectra X | Welcome %s"):format(displayName), {
@@ -212,9 +192,6 @@ local window = library:AddWindow(("Spectra X | Welcome %s"):format(displayName),
     can_resize = true,
 })
 
--- ========================================
--- TAB HOME
--- ========================================
 local HomeTab = window:AddTab("Home")
 HomeTab:AddLabel("╭──────────────────────────╮")
 HomeTab:AddLabel("    Welcome To Spextra X")
@@ -236,9 +213,6 @@ HomeTab:AddButton("Servidor Discord", function()
     setclipboard("https://discord.gg/zYrg2qPjTp")
 end)
 
--- ========================================
--- TAB MAIN - BRAWLS
--- ========================================
 local MainTab = window:AddTab("Main")
 local BrawlFolder = MainTab:AddFolder("  Auto Brawls")
 
@@ -320,9 +294,6 @@ BrawlFolder:AddSwitch("Auto Join Brawls", function(state)
     end)
 end)
 
--- ========================================
--- TAB MAIN - GYMS
--- ========================================
 local farmGymsFolder = MainTab:AddFolder("  Auto Gyms")
 local gymToggles = {}
 local workoutTypes = {"Bench Press", "Squat", "Deadlift", "Pull Up"}
@@ -371,9 +342,6 @@ for _, workoutType in ipairs(workoutTypes) do
     gymToggles[workoutType] = toggle
 end
 
--- ========================================
--- TAB MAIN - ROCKS
--- ========================================
 local rockFolder = MainTab:AddFolder("  Auto Rocks")
 
 local function AddAutoPunchRock(title, rockName, delay)
@@ -423,9 +391,6 @@ rockFolder:AddSwitch("Auto Punch", function(state)
     end
 end)
 
--- ========================================
--- TAB MAIN - AUTO EQUIP TOOLS
--- ========================================
 local autoEquipToolsFolder = MainTab:AddFolder("  Auto Equip Tools")
 
 autoEquipToolsFolder:AddButton("Gamepass AutoLift", function()
@@ -475,9 +440,6 @@ autoEquipToolsFolder:AddSwitch("Fast Tools", function(Value)
     end
 end)
 
--- ========================================
--- TAB FARM
--- ========================================
 local FarmTab = window:AddTab("Farm")
 local RockFolder = FarmTab:AddFolder("  Auto Rock V2")
 local RockToggles = {}
@@ -503,9 +465,6 @@ for _, rock in ipairs(CONFIG.Rocks) do
     end
 end
 
--- ========================================
--- TAB FARM - TOOLS COMBINATION
--- ========================================
 local toolsCombFolder = FarmTab:AddFolder("  Auto Tools OP")
 toolsCombFolder:AddLabel("-----{ Weight + Punch }-----")
 
@@ -575,9 +534,6 @@ for _, combo in ipairs(toolCombinations) do
     AddAutoTool(combo[1], combo[2], "Ancient Jungle Rock", 0.0001)
 end
 
--- ========================================
--- TAB FARM - REBIRTHS
--- ========================================
 local rebirthsFolder = FarmTab:AddFolder("  Auto Rebirths")
 local targetRebirthValue = 0
 
@@ -669,9 +625,6 @@ rebirthsFolder:AddButton("Anti Rebirth", function()
     end)
 end)
 
--- ========================================
--- TAB PACKS - REBIRTH WITH PACKS
--- ========================================
 local PacksTab = window:AddTab("Packs")
 local RebirthFolder = PacksTab:AddFolder("  Rebirth With Packs")
 
@@ -950,9 +903,6 @@ RebirthFolder:AddButton("Jungle Lift", function()
     VIM:SendKeyEvent(false, Enum.KeyCode.E, false, game)
 end)
 
--- ========================================
--- TAB PACKS - STRENGTH WITH PACKS
--- ========================================
 local StrengthFolder = PacksTab:AddFolder("  Strength With Packs")
 
 StrengthFolder:AddLabel("Time:").TextSize = 20
@@ -1262,9 +1212,6 @@ StrengthFolder:AddButton("Equip Swift Samurai", function()
     equipPetsByName("Swift Samurai")
 end)
 
--- ========================================
--- TAB STATS
--- ========================================
 local estadisticas = window:AddTab("Stats")
 local SelectPlayerName = ""
 
@@ -1381,9 +1328,6 @@ task.spawn(function()
     end
 end)
 
--- ========================================
--- TAB MISC
--- ========================================
 local MiscTab = window:AddTab("Misc")
 local misc1Folder = MiscTab:AddFolder("  Misc 1")
 
@@ -1593,9 +1537,6 @@ misc4Folder:AddSwitch("Full Walk on Water", function(bool)
     end
 end)
 
--- ========================================
--- TAB PETS
--- ========================================
 local pets = window:AddTab("Pets")
 
 local crystalData = {
@@ -1706,13 +1647,6 @@ pets:AddSwitch("Auto Buy Ultimates", function(bool)
     end
 end)
 
--- ========================================
--- TABS RESTANTES (PLACEHOLDER)
--- ========================================
-
--- ========================================
--- TAB DATA - CALCULATORS
--- ========================================
 local DataTab = window:AddTab("Data")
 
 local calculatorData = {
@@ -1763,7 +1697,7 @@ local function formatNumberCalc(num)
 end
 
 local function formatDisplayCalc(num)
-    return formatNumberCalc(num) .. " 【" .. formatFull(num) .. "】"
+    return formatNumberCalc(num) .. " [" .. formatFull(num) .. "]"
 end
 
 for _, calc in ipairs(calculatorData) do
@@ -1784,22 +1718,22 @@ for _, calc in ipairs(calculatorData) do
         end
     end
     
-    calc.folder:AddButton("▶ Start " .. calc.name, function()
+    calc.folder:AddButton("Start " .. calc.name, function()
         calc.active = true
         calc.startTime = tick()
         calc.startValue = calc.getValue()
         calc.labels.status.Text = "Status: ⏱ Calculando..."
     end)
     
-    calc.folder:AddButton("⏸ Stop " .. calc.name, function()
+    calc.folder:AddButton("Stop " .. calc.name, function()
         calc.active = false
         calc.startTime = 0
         calc.startValue = 0
-        calc.labels.status.Text = "Status: ⏸ Detenido"
+        calc.labels.status.Text = "Status:  Detenido"
     end)
 end
 
-DataTab:AddButton("🔄 Reset All Calculators", function()
+DataTab:AddButton("Reset All Calculators", function()
     for _, calc in ipairs(calculatorData) do
         calc.active = false
         calc.startTime = 0
@@ -1827,7 +1761,7 @@ task.spawn(function()
                     local perMinute = (gained / timeElapsed) * 60
                     local perHour = perMinute * 60
                     local perDay = perHour * 24
-                    calc.labels.status.Text = "Status: ✅ Activo"
+                    calc.labels.status.Text = "Status:  Activo"
                     calc.labels.perMinute.Text = "Per Minute: " .. formatDisplayCalc(perMinute)
                     calc.labels.perHour.Text = "Per Hour: " .. formatDisplayCalc(perHour)
                     calc.labels.perDay.Text = "Per Day: " .. formatDisplayCalc(perDay)
@@ -1849,9 +1783,6 @@ task.spawn(function()
     end
 end)
 
--- ========================================
--- TAB GIFT
--- ========================================
 local GiftTab = window:AddTab("Gift")
 
 local giftData = {
@@ -2006,13 +1937,6 @@ GiftTab:AddSwitch("Auto Clear Inventory", function(state)
     autoEatBoostsEnabled = state
 end)
 
--- ========================================
--- TABS FINALES (PLACEHOLDER)
--- ========================================
-
--- ========================================
--- TAB KILLER
--- ========================================
 local KillerTab = window:AddTab("Killer")
 
 local titleLabel = KillerTab:AddLabel("Kill Aura")
@@ -2690,31 +2614,6 @@ KillerTab:AddButton("Kill Counter UI", function()
     end
 end)
 
-local whitelistLabel = KillerTab:AddLabel("Whitelist: None")
-whitelistLabel.TextSize = 17
-
-KillerTab:AddButton("Clear Whitelist", function()
-    _G.whitelistedPlayers = {}
-end)
-
-local blacklistLabel = KillerTab:AddLabel("Killlist: None")
-blacklistLabel.TextSize = 17
-
-KillerTab:AddButton("Clear Blacklist", function()
-    _G.blacklistedPlayers = {}
-end)
-
-task.spawn(function()
-    while true do
-        whitelistLabel.Text = #_G.whitelistedPlayers == 0 and "Whitelist: None" or ("Whitelist: " .. table.concat(_G.whitelistedPlayers, ", "))
-        blacklistLabel.Text = #_G.blacklistedPlayers == 0 and "Killlist: None" or ("Killlist: " .. table.concat(_G.blacklistedPlayers, ", "))
-        task.wait(0.2)
-    end
-end)
-
-local ExtrasTab = window:AddTab("Extras")
-local TeleportTab = window:AddTab("Teleport")
-
 local petDropdown = KillerTab:AddDropdown("Select Pet", function(text)
     local petsFolder = Player.petsFolder
     for _, folder in pairs(petsFolder:GetChildren()) do
@@ -3258,7 +3157,7 @@ KillerTab:AddButton("Kill Counter UI", function()
             titleLabel.Size = UDim2.new(1, 0, 0, 20)
             titleLabel.Position = UDim2.new(0, 0, 0, 0)
             titleLabel.BackgroundTransparency = 1
-            titleLabel.Text = "Galaxy Hub"
+            titleLabel.Text = "Spectra X"
             titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
             titleLabel.Font = Enum.Font.SourceSansBold
             titleLabel.TextScaled = true
