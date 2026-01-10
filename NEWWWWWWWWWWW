@@ -15,8 +15,8 @@ local LP = Players.LocalPlayer
 local Player = LP
 
 local CONFIG = {
-    BlacklistedUsers = {"DulceSkyx", "HonnyyDezz", "Honnydezz_z", "itsBAJAMILIONcat", "HonnyDezz_11", "PR_inmortal", "F3RNO0O00000", "xXLXGHTBRINGERXx"},
-    BlacklistedPrefixes = {"SC_", "KTA_", "HZ_", "VAL_", "ZTX_"},
+    BlacklistedUsers = {"DulceSkyx", "chuy82992", "isaias_malagon", "HonnyyDezz", "Honnydezz_z", "itsBAJAMILIONcat", "HonnyDezz_11", "PR_inmortal", "F3RNO0O00000", "xXLXGHTBRINGERXx"},
+    BlacklistedPrefixes = {"KTA_", "HZ_", "VAL_", "ZTX_"},
     
     Rocks = {
         {name = "Ancient Jungle Rock", display = "Jungle Rock (10M)", delay = 0.0001, pos = Vector3.new(-8976, 9, -6130), index = "10M"},
@@ -2185,7 +2185,7 @@ KillerTab:AddButton("Recover Punch Anim", function()
     end
 end)
 
-KillerTab:AddLabel("Auto Kill:").TextSize = 22
+KillerTab:AddLabel("List To Kill").TextSize = 22
 
 local whitelistDropdown = KillerTab:AddDropdown("Add to Whitelist", function(selectedText)
     local playerName = selectedText:match("| (.+)$")
@@ -2209,19 +2209,11 @@ local blacklistDropdown = KillerTab:AddDropdown("Add to Killlist", function(sele
     end
 end)
 
-local spyTargetDropdown = KillerTab:AddDropdown("Select View Target", function(text)
-    local playerName = text:match("| (.+)$")
-    if playerName then
-        targetPlayerName = playerName
-    end
-end)
-
 for _, plr in ipairs(Players:GetPlayers()) do
     if plr ~= Player then
         local displayText = plr.DisplayName .. " | " .. plr.Name
         whitelistDropdown:Add(displayText)
         blacklistDropdown:Add(displayText)
-        spyTargetDropdown:Add(displayText)
     end
 end
 
@@ -2231,9 +2223,10 @@ Players.PlayerAdded:Connect(function(plr)
         local displayText = plr.DisplayName .. " | " .. plr.Name
         whitelistDropdown:Add(displayText)
         blacklistDropdown:Add(displayText)
-        spyTargetDropdown:Add(displayText)
     end
 end)
+
+KillerTab:AddLabel("Auto Kill:").TextSize = 22
 
 KillerTab:AddSwitch("Kill Everyone", function(bool)
     _G.killAll = bool
@@ -2287,7 +2280,7 @@ KillerTab:AddSwitch("Whitelist Friends", function(bool)
     end
 end):Set(false)
 
-KillerTab:AddLabel("------Karma------")
+KillerTab:AddLabel("Farm Karma").TextSize = 22
 
 KillerTab:AddSwitch("Auto Good Karma", function(bool)
     _G.autoGoodKarma = bool
@@ -2351,13 +2344,13 @@ KillerTab:AddSwitch("Auto Bad Karma", function(bool)
     end)
 end)
 
-KillerTab:AddLabel("---Egg Obligatorio And nan---")
+KillerTab:AddLabel("Punch Dead").TextSize = 22
 
 KillerTab:AddButton("Size nan", function()
     RS.rEvents.changeSpeedSizeRemote:InvokeServer("changeSize", 0/0)
 end)
 
-KillerTab:AddSwitch("Punch Boost Scripts", function(Value)
+KillerTab:AddSwitch("Punch Dead", function(Value)
     _G.PunchBoostActive = Value
     if Value then
         local urls = {
@@ -2380,33 +2373,6 @@ KillerTab:AddSwitch("Punch Boost Scripts", function(Value)
     end
 end)
 
-local blacklistDropdown = KillerTab:AddDropdown("Add to Killlist", function(selectedText)
-    local playerName = selectedText:match("| (.+)$")
-    if playerName then
-        playerName = playerName:gsub("^%s*(.-)%s*$", "%1")
-        for _, name in ipairs(_G.blacklistedPlayers) do
-            if name:lower() == playerName:lower() then return end
-        end
-        table.insert(_G.blacklistedPlayers, playerName)
-    end
-end)
-
-for _, plr in ipairs(Players:GetPlayers()) do
-    if plr ~= Player then
-        local displayText = getPlayerDisplayText(plr)
-        whitelistDropdown:Add(displayText)
-        blacklistDropdown:Add(displayText)
-    end
-end
-
-Players.PlayerAdded:Connect(function(plr)
-    if plr ~= Player then
-        local displayText = getPlayerDisplayText(plr)
-        whitelistDropdown:Add(displayText)
-        blacklistDropdown:Add(displayText)
-    end
-end)
-
 KillerTab:AddSwitch("Kill List", function(bool)
     _G.killBlacklistedOnly = bool
     if bool then
@@ -2426,6 +2392,28 @@ KillerTab:AddSwitch("Kill List", function(bool)
             _G.blacklistKillConnection:Disconnect()
             _G.blacklistKillConnection = nil
         end
+    end
+end)
+
+
+local spyTargetDropdown = KillerTab:AddDropdown("Select View Target", function(text)
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if text == (plr.DisplayName .. " | " .. plr.Name) and plr ~= Player then
+            targetPlayerName = plr.Name
+            break
+        end
+    end
+end)
+
+for _, plr in ipairs(Players:GetPlayers()) do
+    if plr ~= Player then
+        spyTargetDropdown:Add(plr.DisplayName .. " | " .. plr.Name)
+    end
+end
+
+Players.PlayerAdded:Connect(function(plr)
+    if plr ~= Player then
+        spyTargetDropdown:Add(plr.DisplayName .. " | " .. plr.Name)
     end
 end)
 
@@ -2572,582 +2560,7 @@ KillerTab:AddButton("Kill Counter UI", function()
             local killsFrame = Instance.new("Frame")
             killsFrame.Size = UDim2.new(0, 180, 0, 55)
             killsFrame.Position = UDim2.new(0.5, -90, 0, 60)
-            killsFrame.BackgroundColor3 = Color3.fromRGB(27, 6, 87)
-            killsFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            killsFrame.Active = true
-            killsFrame.Draggable = true
-            killsFrame.Parent = killsGui
-            
-            local titleLabel = Instance.new("TextLabel")
-            titleLabel.Size = UDim2.new(1, 0, 0, 20)
-            titleLabel.Position = UDim2.new(0, 0, 0, 0)
-            titleLabel.BackgroundTransparency = 1
-            titleLabel.Text = "Galaxy Hub"
-            titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-            titleLabel.Font = Enum.Font.SourceSansBold
-            titleLabel.TextScaled = true
-            titleLabel.Parent = killsFrame
-            
-            local killsLabel = Instance.new("TextLabel")
-            killsLabel.Size = UDim2.new(1, 0, 0, 35)
-            killsLabel.Position = UDim2.new(0, 0, 0, 20)
-            killsLabel.BackgroundTransparency = 1
-            killsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-            killsLabel.TextScaled = true
-            killsLabel.Font = Enum.Font.SourceSansBold
-            killsLabel.Parent = killsFrame
-            
-            task.spawn(function()
-                while killsGui and killsGui.Parent do
-                    local kills = Player:FindFirstChild("leaderstats") and Player.leaderstats:FindFirstChild("Kills")
-                    killsLabel.Text = kills and ("Kills: " .. tostring(kills.Value)) or "Kills: 0"
-                    task.wait(0.2)
-                end
-            end)
-        else
-            killsGui.Enabled = true
-        end
-    else
-        if killsGui then
-            killsGui.Enabled = false
-        end
-    end
-end)
-
-local petDropdown = KillerTab:AddDropdown("Select Pet", function(text)
-    local petsFolder = Player.petsFolder
-    for _, folder in pairs(petsFolder:GetChildren()) do
-        if folder:IsA("Folder") then
-            for _, pet in pairs(folder:GetChildren()) do
-                RS.rEvents.equipPetEvent:FireServer("unequipPet", pet)
-            end
-        end
-    end
-    task.wait(0.2)
-    local petsToEquip = {}
-    for _, pet in pairs(Player.petsFolder.Unique:GetChildren()) do
-        if pet.Name == text then
-            table.insert(petsToEquip, pet)
-        end
-    end
-    for i = 1, math.min(8, #petsToEquip) do
-        RS.rEvents.equipPetEvent:FireServer("equipPet", petsToEquip[i])
-        task.wait(0.1)
-    end
-end)
-petDropdown:Add("Wild Wizard")
-petDropdown:Add("Mighty Monster")
-
-KillerTab:AddButton("Remove Punch Anim", function()
-    local blockedAnimations = {
-        ["rbxassetid://3638729053"] = true,
-        ["rbxassetid://3638767427"] = true,
-    }
-    
-    local function setupAnimationBlocking()
-        local char = Player.Character
-        if not char or not char:FindFirstChild("Humanoid") then return end
-        local humanoid = char:FindFirstChild("Humanoid")
-        
-        for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
-            if track.Animation then
-                local animId = track.Animation.AnimationId
-                local animName = track.Name:lower()
-                if blockedAnimations[animId] or animName:match("punch") or animName:match("attack") or animName:match("right") then
-                    track:Stop()
-                end
-            end
-        end
-        
-        if not _G.AnimBlockConnection then
-            _G.AnimBlockConnection = humanoid.AnimationPlayed:Connect(function(track)
-                if track.Animation then
-                    local animId = track.Animation.AnimationId
-                    local animName = track.Name:lower()
-                    if blockedAnimations[animId] or animName:match("punch") or animName:match("attack") or animName:match("right") then
-                        track:Stop()
-                    end
-                end
-            end)
-        end
-    end
-    
-    local function overrideToolActivation()
-        local function processTool(tool)
-            if tool and (tool.Name == "Punch" or tool.Name:match("Attack") or tool.Name:match("Right")) then
-                if not tool:GetAttribute("ActivatedOverride") then
-                    tool:SetAttribute("ActivatedOverride", true)
-                    local connection = tool.Activated:Connect(function()
-                        task.wait(0.05)
-                        local char = Player.Character
-                        if char and char:FindFirstChild("Humanoid") then
-                            for _, track in pairs(char.Humanoid:GetPlayingAnimationTracks()) do
-                                if track.Animation then
-                                    local animId = track.Animation.AnimationId
-                                    local animName = track.Name:lower()
-                                    if blockedAnimations[animId] or animName:match("punch") or animName:match("attack") or animName:match("right") then
-                                        track:Stop()
-                                    end
-                                end
-                            end
-                        end
-                    end)
-                    if not _G.ToolConnections then _G.ToolConnections = {} end
-                    _G.ToolConnections[tool] = connection
-                end
-            end
-        end
-        
-        for _, tool in pairs(Player.Backpack:GetChildren()) do processTool(tool) end
-        local char = Player.Character
-        if char then
-            for _, tool in pairs(char:GetChildren()) do
-                if tool:IsA("Tool") then processTool(tool) end
-            end
-        end
-        
-        if not _G.BackpackAddedConnection then
-            _G.BackpackAddedConnection = Player.Backpack.ChildAdded:Connect(function(child)
-                if child:IsA("Tool") then
-                    task.wait(0.1)
-                    processTool(child)
-                end
-            end)
-        end
-        
-        if not _G.CharacterToolAddedConnection and char then
-            _G.CharacterToolAddedConnection = char.ChildAdded:Connect(function(child)
-                if child:IsA("Tool") then
-                    task.wait(0.1)
-                    processTool(child)
-                end
-            end)
-        end
-    end
-    
-    setupAnimationBlocking()
-    overrideToolActivation()
-    
-    if not _G.AnimMonitorConnection then
-        _G.AnimMonitorConnection = RunService.Heartbeat:Connect(function()
-            if tick() % 0.5 < 0.01 then
-                local char = Player.Character
-                if char and char:FindFirstChild("Humanoid") then
-                    for _, track in pairs(char.Humanoid:GetPlayingAnimationTracks()) do
-                        if track.Animation then
-                            local animId = track.Animation.AnimationId
-                            local animName = track.Name:lower()
-                            if blockedAnimations[animId] or animName:match("punch") or animName:match("attack") or animName:match("right") then
-                                track:Stop()
-                            end
-                        end
-                    end
-                end
-            end
-        end)
-    end
-    
-    if not _G.CharacterAddedConnection then
-        _G.CharacterAddedConnection = Player.CharacterAdded:Connect(function(newChar)
-            task.wait(1)
-            setupAnimationBlocking()
-            overrideToolActivation()
-            if _G.CharacterToolAddedConnection then
-                _G.CharacterToolAddedConnection:Disconnect()
-            end
-            _G.CharacterToolAddedConnection = newChar.ChildAdded:Connect(function(child)
-                if child:IsA("Tool") then
-                    task.wait(0.1)
-                    processTool(child)
-                end
-            end)
-        end)
-    end
-end)
-
-KillerTab:AddButton("Recover Punch Anim", function()
-    local connections = {"AnimBlockConnection", "AnimMonitorConnection", "BackpackAddedConnection", "CharacterToolAddedConnection", "CharacterAddedConnection"}
-    for _, conn in ipairs(connections) do
-        if _G[conn] then
-            _G[conn]:Disconnect()
-            _G[conn] = nil
-        end
-    end
-    if _G.ToolConnections then
-        for _, conn in pairs(_G.ToolConnections) do
-            if conn then conn:Disconnect() end
-        end
-        _G.ToolConnections = nil
-    end
-end)
-
-KillerTab:AddLabel("Auto Kill:").TextSize = 22
-
-local whitelistDropdown = KillerTab:AddDropdown("Add to Whitelist", function(selectedText)
-    local playerName = selectedText:match("| (.+)$")
-    if playerName then
-        playerName = playerName:gsub("^%s*(.-)%s*$", "%1")
-        for _, name in ipairs(_G.whitelistedPlayers) do
-            if name:lower() == playerName:lower() then return end
-        end
-        table.insert(_G.whitelistedPlayers, playerName)
-    end
-end)
-
-KillerTab:AddSwitch("Kill Everyone", function(bool)
-    _G.killAll = bool
-    if bool then
-        if not _G.killAllConnection then
-            _G.killAllConnection = RunService.Heartbeat:Connect(function()
-                if _G.killAll then
-                    for _, player in ipairs(Players:GetPlayers()) do
-                        if player ~= Player and not isWhitelisted(player) then
-                            killPlayer(player)
-                        end
-                    end
-                end
-            end)
-        end
-    else
-        if _G.killAllConnection then
-            _G.killAllConnection:Disconnect()
-            _G.killAllConnection = nil
-        end
-    end
-end):Set(false)
-
-KillerTab:AddSwitch("Whitelist Friends", function(bool)
-    _G.whitelistFriends = bool
-    if bool then
-        for _, player in pairs(Players:GetPlayers()) do
-            if player ~= Player and player:IsFriendsWith(Player.UserId) then
-                local playerName = player.Name
-                local alreadyWhitelisted = false
-                for _, name in ipairs(_G.whitelistedPlayers) do
-                    if name:lower() == playerName:lower() then
-                        alreadyWhitelisted = true
-                        break
-                    end
-                end
-                if not alreadyWhitelisted then
-                    table.insert(_G.whitelistedPlayers, playerName)
-                end
-            end
-        end
-        Players.PlayerAdded:Connect(function(player)
-            if _G.whitelistFriends and player:IsFriendsWith(Player.UserId) then
-                local playerName = player.Name
-                for _, name in ipairs(_G.whitelistedPlayers) do
-                    if name:lower() == playerName:lower() then return end
-                end
-                table.insert(_G.whitelistedPlayers, playerName)
-            end
-        end)
-    end
-end):Set(false)
-
-KillerTab:AddLabel("------Karma------")
-
-KillerTab:AddSwitch("Auto Good Karma", function(bool)
-    _G.autoGoodKarma = bool
-    task.spawn(function()
-        while _G.autoGoodKarma do
-            local playerChar = Player.Character
-            local rightHand = playerChar and playerChar:FindFirstChild("RightHand")
-            local leftHand = playerChar and playerChar:FindFirstChild("LeftHand")
-            if playerChar and rightHand and leftHand then
-                for _, target in ipairs(Players:GetPlayers()) do
-                    if target ~= Player then
-                        local evilKarma = target:FindFirstChild("evilKarma")
-                        local goodKarma = target:FindFirstChild("goodKarma")
-                        if evilKarma and goodKarma and evilKarma:IsA("IntValue") and goodKarma:IsA("IntValue") and evilKarma.Value > goodKarma.Value then
-                            local rootPart = target.Character and target.Character:FindFirstChild("HumanoidRootPart")
-                            if rootPart then
-                                firetouchinterest(rightHand, rootPart, 1)
-                                firetouchinterest(leftHand, rootPart, 1)
-                                firetouchinterest(rightHand, rootPart, 0)
-                                firetouchinterest(leftHand, rootPart, 0)
-                            end
-                        end
-                    end
-                end
-            end
-            task.wait(0.01)
-        end
-    end)
-end)
-
-KillerTab:AddSwitch("Auto Bad Karma", function(bool)
-    _G.autoBadKarma = bool
-    task.spawn(function()
-        while _G.autoBadKarma do
-            local playerChar = Player.Character
-            local rightHand = playerChar and playerChar:FindFirstChild("RightHand")
-            local leftHand = playerChar and playerChar:FindFirstChild("LeftHand")
-            if playerChar and rightHand and leftHand then
-                for _, target in ipairs(Players:GetPlayers()) do
-                    if target ~= Player then
-                        local evilKarma = target:FindFirstChild("evilKarma")
-                        local goodKarma = target:FindFirstChild("goodKarma")
-                        if evilKarma and goodKarma and evilKarma:IsA("IntValue") and goodKarma:IsA("IntValue") and goodKarma.Value > evilKarma.Value then
-                            local rootPart = target.Character and target.Character:FindFirstChild("HumanoidRootPart")
-                            if rootPart then
-                                firetouchinterest(rightHand, rootPart, 1)
-                                firetouchinterest(leftHand, rootPart, 1)
-                                firetouchinterest(rightHand, rootPart, 0)
-                                firetouchinterest(leftHand, rootPart, 0)
-                            end
-                        end
-                    end
-                end
-            end
-            task.wait(0.01)
-        end
-    end)
-end)
-
-KillerTab:AddLabel("---Egg Obligatorio And nan---")
-
-KillerTab:AddButton("Size nan", function()
-    RS.rEvents.changeSpeedSizeRemote:InvokeServer("changeSize", 0/0)
-end)
-
-KillerTab:AddSwitch("Punch Boost Scripts", function(Value)
-    _G.PunchBoostActive = Value
-    if Value then
-        local urls = {
-            "https://raw.githubusercontent.com/Sherya-Script-Private/Muerto/refs/heads/main/Punch1 ",
-            "https://raw.githubusercontent.com/Sherya-Script-Private/Muerto/refs/heads/main/puch2",
-            "https://raw.githubusercontent.com/Sherya-Script-Private/Muerto/refs/heads/main/punch3",
-            "https://raw.githubusercontent.com/Sherya-Script-Private/Muerto/refs/heads/main/punch4",
-            "https://raw.githubusercontent.com/Sherya-Script-Private/Muerto/refs/heads/main/punch5",
-            "https://raw.githubusercontent.com/Sherya-Script-Private/Muerto/refs/heads/main/punch6"
-        }
-        task.spawn(function()
-            for i, url in ipairs(urls) do
-                if not _G.PunchBoostActive then break end
-                pcall(function()
-                    loadstring(game:HttpGet(url, true))()
-                end)
-                task.wait(0.5)
-            end
-        end)
-    end
-end)
-
-local blacklistDropdown = KillerTab:AddDropdown("Add to Killlist", function(selectedText)
-    local playerName = selectedText:match("| (.+)$")
-    if playerName then
-        playerName = playerName:gsub("^%s*(.-)%s*$", "%1")
-        for _, name in ipairs(_G.blacklistedPlayers) do
-            if name:lower() == playerName:lower() then return end
-        end
-        table.insert(_G.blacklistedPlayers, playerName)
-    end
-end)
-
-for _, plr in ipairs(Players:GetPlayers()) do
-    if plr ~= Player then
-        local displayText = getPlayerDisplayText(plr)
-        whitelistDropdown:Add(displayText)
-        blacklistDropdown:Add(displayText)
-    end
-end
-
-Players.PlayerAdded:Connect(function(plr)
-    if plr ~= Player then
-        local displayText = getPlayerDisplayText(plr)
-        whitelistDropdown:Add(displayText)
-        blacklistDropdown:Add(displayText)
-    end
-end)
-
-KillerTab:AddSwitch("Kill List", function(bool)
-    _G.killBlacklistedOnly = bool
-    if bool then
-        if not _G.blacklistKillConnection then
-            _G.blacklistKillConnection = RunService.Heartbeat:Connect(function()
-                if _G.killBlacklistedOnly then
-                    for _, player in ipairs(Players:GetPlayers()) do
-                        if player ~= Player and isBlacklisted(player) then
-                            killPlayer(player)
-                        end
-                    end
-                end
-            end)
-        end
-    else
-        if _G.blacklistKillConnection then
-            _G.blacklistKillConnection:Disconnect()
-            _G.blacklistKillConnection = nil
-        end
-    end
-end)
-
-local spyTargetDropdown = KillerTab:AddDropdown("Select View Target", function(text)
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if text == (plr.DisplayName .. " | " .. plr.Name) and plr ~= Player then
-            targetPlayerName = plr.Name
-            break
-        end
-    end
-end)
-
-for _, plr in ipairs(Players:GetPlayers()) do
-    if plr ~= Player then
-        spyTargetDropdown:Add(plr.DisplayName .. " | " .. plr.Name)
-    end
-end
-
-Players.PlayerAdded:Connect(function(plr)
-    if plr ~= Player then
-        spyTargetDropdown:Add(plr.DisplayName .. " | " .. plr.Name)
-    end
-end)
-
-KillerTab:AddSwitch("View Player", function(bool)
-    spying = bool
-    if not spying then
-        workspace.CurrentCamera.CameraSubject = Player.Character and Player.Character:FindFirstChild("Humanoid") or Player
-        return
-    end
-    task.spawn(function()
-        while spying do
-            local target = Players:FindFirstChild(targetPlayerName)
-            if target and target ~= Player then
-                local humanoid = target.Character and target.Character:FindFirstChild("Humanoid")
-                if humanoid then
-                    workspace.CurrentCamera.CameraSubject = humanoid
-                end
-            end
-            task.wait(0.1)
-        end
-    end)
-end)
-
-KillerTab:AddLabel("Kill Aura:").TextSize = 22
-
-local function updateRingSize()
-    if not ringPart then return end
-    local diameter = (_G.deathRingRange or 20) * 2
-    ringPart.Size = Vector3.new(0.2, diameter, diameter)
-end
-
-KillerTab:AddTextBox("Range 1-140", function(text)
-    local range = tonumber(text)
-    if range then
-        _G.deathRingRange = math.clamp(range, 1, 140)
-        updateRingSize()
-    end
-end)
-
-local function toggleRingVisual()
-    if _G.showDeathRing then
-        ringPart = Instance.new("Part")
-        ringPart.Shape = Enum.PartType.Cylinder
-        ringPart.Material = Enum.Material.Neon
-        ringPart.Color = Color3.fromRGB(50, 163, 255)
-        ringPart.Transparency = 0.6
-        ringPart.Anchored = true
-        ringPart.CanCollide = false
-        ringPart.CastShadow = false
-        updateRingSize()
-        ringPart.Parent = workspace
-    elseif ringPart then
-        ringPart:Destroy()
-        ringPart = nil
-    end
-end
-
-local function updateRingPosition()
-    if not ringPart then return end
-    local character = checkCharacter()
-    local rootPart = character and character:FindFirstChild("HumanoidRootPart")
-    if rootPart then
-        ringPart.CFrame = rootPart.CFrame * CFrame.Angles(0, 0, math.rad(90))
-    end
-end
-
-KillerTab:AddSwitch("Death Ring", function(bool)
-    _G.deathRingEnabled = bool
-    if bool then
-        if not _G.deathRingConnection then
-            _G.deathRingConnection = RunService.Heartbeat:Connect(function()
-                updateRingPosition()
-                local character = checkCharacter()
-                local myPosition = character and character:FindFirstChild("HumanoidRootPart") and character.HumanoidRootPart.Position
-                if not myPosition then return end
-                for _, player in ipairs(Players:GetPlayers()) do
-                    if player ~= Player and not isWhitelisted(player) and isPlayerAlive(player) then
-                        local distance = (myPosition - player.Character.HumanoidRootPart.Position).Magnitude
-                        if distance <= (_G.deathRingRange or 20) then
-                            killPlayer(player)
-                        end
-                    end
-                end
-            end)
-        end
-    else
-        if _G.deathRingConnection then
-            _G.deathRingConnection:Disconnect()
-            _G.deathRingConnection = nil
-        end
-    end
-end):Set(false)
-
-KillerTab:AddSwitch("Show Ring", function(bool)
-    _G.showDeathRing = bool
-    toggleRingVisual()
-end):Set(false)
-
-KillerTab:AddSwitch("Fast Punch", function(state)
-    _G.autoPunchActive = state
-    if state then
-        task.spawn(function()
-            while _G.autoPunchActive do
-                local punch = Player.Backpack:FindFirstChild("Punch")
-                if punch then
-                    punch.Parent = Player.Character
-                    if punch:FindFirstChild("attackTime") then
-                        punch.attackTime.Value = 0
-                    end
-                end
-                task.wait()
-            end
-        end)
-        task.spawn(function()
-            while _G.autoPunchActive do
-                local punch = Player.Character and Player.Character:FindFirstChild("Punch")
-                if punch then
-                    punch:Activate()
-                end
-                task.wait()
-            end
-        end)
-    else
-        local punch = Player.Character and Player.Character:FindFirstChild("Punch")
-        if punch then
-            punch.Parent = Player.Backpack
-        end
-    end
-end)
-
-local killsShown = false
-local killsGui = nil
-
-KillerTab:AddButton("Kill Counter UI", function()
-    killsShown = not killsShown
-    if killsShown then
-        if not killsGui then
-            killsGui = Instance.new("ScreenGui")
-            killsGui.Name = "KillsGui"
-            killsGui.ResetOnSpawn = false
-            killsGui.Parent = Player:WaitForChild("PlayerGui")
-            
-            local killsFrame = Instance.new("Frame")
-            killsFrame.Size = UDim2.new(0, 180, 0, 55)
-            killsFrame.Position = UDim2.new(0.5, -90, 0, 60)
-            killsFrame.BackgroundColor3 = Color3.fromRGB(27, 6, 87)
+            killsFrame.BackgroundColor3 = Color3.fromRGB(38, 32, 46)
             killsFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
             killsFrame.Active = true
             killsFrame.Draggable = true
@@ -3212,4 +2625,34 @@ task.spawn(function()
 end)
 
 local ExtrasTab = window:AddTab("Extras")
+
+local KillsOptions = ExtrasTab:AddFolder(" Killer More Options")
+
+KillsOptions:AddLabel("Soon...")
+
+local PetsOP = ExtrasTab:AddFolder(" Auto Evolved Pets")
+
+PetsOP:AddLabel("Soon...")
+
+local PetsTrades = ExtrasTab:AddFolder(" Auto Trade Pets")
+
+PetsTrades:AddLabel("Soon...")
+
 local TeleportTab = window:AddTab("Teleport")
+
+local BrawlAreas = TeleportTab:AddFolder("  Brawl Areas")
+
+TeleportTab:AddLabel("Soon...")
+
+local GymFollder = TeleportTab:AddFolder("  Portals")
+
+GymFollder:AddLabel("Soon...")
+
+local IslandFolder = TeleportTab:AddFolder("  Isladns")
+
+IslandFolder:AddLabel("Soon...")
+
+local SafeFolder = TeleportTab:AddFolder("  Safe Zones")
+
+SafeFolder:AddLabel("Soon...")
+
