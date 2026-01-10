@@ -1,13 +1,19 @@
 -- ========================================
 -- SERVICIOS Y REFERENCIAS GLOBALES
 -- ========================================
-local Players = game:GetService("Players")
-local VirtualUser = game:GetService("VirtualUser")
-local RS = game:GetService("ReplicatedStorage")
-local VIM = game:GetService("VirtualInputManager")
-local RunService = game:GetService("RunService")
-local Stats = game:GetService("Stats")
-local Workspace = workspace
+local Services = {
+    Players = game:GetService("Players"),
+    VirtualUser = game:GetService("VirtualUser"),
+    RS = game:GetService("ReplicatedStorage"),
+    VIM = game:GetService("VirtualInputManager"),
+    RunService = game:GetService("RunService"),
+    Stats = game:GetService("Stats"),
+    Workspace = workspace
+}
+
+local Players, VirtualUser, RS, VIM, RunService, Stats, Workspace = 
+    Services.Players, Services.VirtualUser, Services.RS, Services.VIM, Services.RunService, Services.Stats, Services.Workspace
+
 local LP = Players.LocalPlayer
 local Player = LP
 
@@ -76,7 +82,9 @@ local CONFIG = {
         Unique = {"Muscle King", "Entropic Blast", "Eternal Megastrike"}
     },
     
-    Ultimates = {"+1 Daily Spin", "+1 Pet Slot", "+10 Item Capacity", "+5% Rep Speed", "Demon Damage", "Galaxy Gains", "Golden Rebirth", "Jungle Swift", "Muscle Mind", "x2 Chest Rewards", "x2 Quest Rewards"}
+    Ultimates = {"+1 Daily Spin", "+1 Pet Slot", "+10 Item Capacity", "+5% Rep Speed", "Demon Damage", "Galaxy Gains", "Golden Rebirth", "Jungle Swift", "Muscle Mind", "x2 Chest Rewards", "x2 Quest Rewards"},
+    
+    Boosts = {"ULTRA Shake", "TOUGH Bar", "Protein Shake", "Energy Shake", "Protein Bar", "Energy Bar", "Tropical Shake"}
 }
 
 -- ========================================
@@ -89,11 +97,21 @@ getgenv().workingGym = false
 getgenv()._AutoRepFarmEnabled = false
 getgenv()._AutoRepFarmLoop = false
 
-local muscleEvent = Player:WaitForChild("muscleEvent")
-local leaderstats = Player:WaitForChild("leaderstats")
-local rebirthsStat = leaderstats:WaitForChild("Rebirths")
-local strengthStat = leaderstats:WaitForChild("Strength")
-local durabilityStat = Player:WaitForChild("Durability")
+_G.whitelistedPlayers = _G.whitelistedPlayers or {}
+_G.blacklistedPlayers = _G.blacklistedPlayers or {}
+_G.deathRingRange = 20
+_G.showDeathRing = false
+
+local refs = {
+    muscleEvent = Player:WaitForChild("muscleEvent"),
+    leaderstats = Player:WaitForChild("leaderstats"),
+}
+refs.rebirthsStat = refs.leaderstats:WaitForChild("Rebirths")
+refs.strengthStat = refs.leaderstats:WaitForChild("Strength")
+refs.durabilityStat = Player:WaitForChild("Durability")
+
+local muscleEvent, leaderstats, rebirthsStat, strengthStat, durabilityStat = 
+    refs.muscleEvent, refs.leaderstats, refs.rebirthsStat, refs.strengthStat, refs.durabilityStat
 
 -- ========================================
 -- FUNCIONES AUXILIARES
